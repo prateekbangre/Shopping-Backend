@@ -48,6 +48,7 @@ public class ProductsController  {
         ArrayList<Products> productsList = new ArrayList<>();
         for (Categories categorie: categoriesList) {
             productsList.addAll(productsService.getByCategoriesId(categorie.getId()));
+            break;
         }
 
         return new ApiResponse<Products>(HttpStatus.OK.value(),"Products list fetched successfully.", productsList);
