@@ -1,1 +1,3 @@
-*.java linguist-detectable=true
+*.* linguist-language=Java
+mvnw.cmd linguist-generated=true
+mvnw linguist-generated=true
