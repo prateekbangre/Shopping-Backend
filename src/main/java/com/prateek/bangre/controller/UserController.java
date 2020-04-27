@@ -22,27 +22,27 @@ public class UserController  {
 
     @PostMapping
     public ApiResponse<Users> saveUser(@RequestBody Users user){
-        return new ApiResponse<>(HttpStatus.OK.value(), "User saved successfully.",usersService.update(user));
+        return new ApiResponse<>(HttpStatus.OK.value(), "User saved successfully.",usersService.updateUsers(user));
     }
 
     @GetMapping
     public ApiResponse<List<Users>> listUser(){
-        return new ApiResponse<>(HttpStatus.OK.value(), "User list fetched successfully.",usersService.findAll());
+        return new ApiResponse<>(HttpStatus.OK.value(), "User list fetched successfully.",usersService.findAllUsers());
     }
 
     @GetMapping("/{id}")
     public ApiResponse<Users> getOne(@PathVariable int id){
-        return new ApiResponse<>(HttpStatus.OK.value(), "User fetched successfully.",usersService.findById(id));
+        return new ApiResponse<>(HttpStatus.OK.value(), "User fetched successfully.",usersService.findUsersById(id));
     }
 
     @PutMapping("/{id}")
     public ApiResponse<Users> update(@RequestBody Users userDto) {
-        return new ApiResponse<>(HttpStatus.OK.value(), "User updated successfully.",usersService.update(userDto));
+        return new ApiResponse<>(HttpStatus.OK.value(), "User updated successfully.",usersService.updateUsers(userDto));
     }
 
     @DeleteMapping("/{id}")
     public ApiResponse<Void> delete(@PathVariable int id) {
-        usersService.delete(id);
+        usersService.deleteUsersById(id);
         return new ApiResponse<>(HttpStatus.OK.value(), "User deleted successfully.", null);
     }
 }

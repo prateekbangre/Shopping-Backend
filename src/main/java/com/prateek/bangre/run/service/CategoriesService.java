@@ -2,11 +2,15 @@ package com.prateek.bangre.run.service;
 
 import com.prateek.bangre.jpa_repository.CategoriesRepository;
 import com.prateek.bangre.model.Categories;
+import com.prateek.bangre.model.OrdersDetails;
+import com.prateek.bangre.model.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author prateek.bangre on 26/04/20.
@@ -17,21 +21,24 @@ import java.util.List;
 public class CategoriesService {
 
     @Autowired
-    private CategoriesRepository repo;
+    private CategoriesRepository categoriesRepository;
 
-    public List<Categories> listAll() {
-        return repo.findAll();
+    public List<Categories> findAllCategories() {
+        List<Categories> list = new ArrayList<>();
+        categoriesRepository.findAll().iterator().forEachRemaining(list::add);
+        return list;
     }
 
-    public void save(Categories product) {
-        repo.save(product);
+    public void updateCategories(Categories product) {
+        categoriesRepository.save(product);
     }
 
-    public Categories get(int id) {
-        return repo.findById(id).get();
+    public Categories getCategoriesById(int id) {
+        Optional<Categories> optionalUser = categoriesRepository.findById(id);
+        return optionalUser.isPresent() ? optionalUser.get() : null;
     }
 
-    public void delete(int id) {
-        repo.deleteById(id);
+    public void deleteCategoriesById(int id) {
+        categoriesRepository.deleteById(id);
     }
 }

@@ -2,11 +2,15 @@ package com.prateek.bangre.run.service;
 
 import com.prateek.bangre.jpa_repository.OrdersRepository;
 import com.prateek.bangre.model.Orders;
+import com.prateek.bangre.model.Products;
+import com.prateek.bangre.model.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author prateek.bangre on 26/04/20.
@@ -17,21 +21,24 @@ import java.util.List;
 public class OrdersService {
 
     @Autowired
-    private OrdersRepository repo;
+    private OrdersRepository ordersRepository;
 
-    public List<Orders> listAll() {
-        return repo.findAll();
+    public List<Orders> findAllOrders() {
+        List<Orders> list = new ArrayList<>();
+        ordersRepository.findAll().iterator().forEachRemaining(list::add);
+        return list;
     }
 
-    public void save(Orders product) {
-        repo.save(product);
+    public void updateOrders(Orders product) {
+        ordersRepository.save(product);
     }
 
-    public Orders get(int id) {
-        return repo.findById(id).get();
+    public Orders getOrdersById(int id) {
+        Optional<Orders> optionalUser = ordersRepository.findById(id);
+        return optionalUser.isPresent() ? optionalUser.get() : null;
     }
 
-    public void delete(int id) {
-        repo.deleteById(id);
+    public void deleteOrdersById(int id) {
+        ordersRepository.deleteById(id);
     }
 }

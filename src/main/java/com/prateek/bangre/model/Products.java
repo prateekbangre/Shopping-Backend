@@ -1,9 +1,6 @@
 package com.prateek.bangre.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -38,5 +35,9 @@ public class Products {
     private String short_desc;
     @Column(name = "cat_id")
     private int catId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cat_id", nullable = false, insertable=false, updatable=false)
+    private Categories categories;
 
 }

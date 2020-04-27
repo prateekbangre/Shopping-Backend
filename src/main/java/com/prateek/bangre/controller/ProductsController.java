@@ -1,20 +1,15 @@
 package com.prateek.bangre.controller;
 
-import com.prateek.bangre.model.ApiResponse;
-import com.prateek.bangre.model.Categories;
-import com.prateek.bangre.model.Products;
-import com.prateek.bangre.model.Users;
+import com.prateek.bangre.model.*;
 import com.prateek.bangre.run.service.CategoriesService;
 import com.prateek.bangre.run.service.ProductsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author prateek.bangre on 26/04/20.
@@ -30,8 +25,8 @@ public class ProductsController  {
     @Autowired
     ProductsService productsService;
 
-    @GetMapping("/page/{page}/limit/{limit}")
-    private ApiResponse<Products> getProducts(@PathVariable int page, @PathVariable int limit){
+    @GetMapping
+    private ApiResponse<Products> getProducts(@RequestParam int page, @RequestParam(defaultValue = "0") int limit){
         page = (page == 0 ? 1 : page);
         limit = (limit == 0 ? 10 : limit);   // set limit of items per page
         int startValue;
@@ -44,13 +39,26 @@ public class ProductsController  {
             endValue = 10;
         }
 
-        ArrayList<Categories> categoriesList = (ArrayList<Categories>) categoriesService.listAll();
-        ArrayList<Products> productsList = new ArrayList<>();
-        for (Categories categorie: categoriesList) {
-            productsList.addAll(productsService.getByCategoriesId(categorie.getId()));
-            break;
-        }
+        List<ProductsJoin> productsDtoList = productsService.getProductsWithCategories().subList(startValue, endValue);
 
-        return new ApiResponse<Products>(HttpStatus.OK.value(),"Products list fetched successfully.", productsList);
+        if (!productsDtoList.isEmpty()){
+            return new ApiResponse<Products>(HttpStatus.OK.value(),"Products list fetched successfully.", productsDtoList);
+        }else {
+            return new ApiResponse<Products>(HttpStatus.OK.value(),"No products found", productsDtoList);
+        }
     }
+
+    @GetMapping("/{prodId}")
+    private ApiResponse<Products> getProductsById(@PathVariable int prodId){
+
+        ArrayList<Products> productsList = new ArrayList<>();
+
+        productsList.add(productsService.getProductsById(prodId));
+        if (!productsList.isEmpty()){
+            return new ApiResponse<Products>(HttpStatus.OK.value(),"Products list fetched successfully.", productsList);
+        }else {
+            return new ApiResponse<Products>(HttpStatus.OK.value(),"No product found with id: "+prodId, productsList);
+        }
+    }
+
 }
