@@ -18,4 +18,10 @@ public interface ProductsRepository extends CrudRepository<Products, Integer> {
 
     @Query(value="SELECT p.id, p.title, p.image, p.images, p.description, p.price, p.quantity, c.title as categoriesName FROM Products p JOIN Categories c order by p.id", nativeQuery = true)
     public  List<ProductsJoin> getProductsWithCategoriesTitle();
+
+    @Query(value="SELECT p.id, p.title, p.image, p.images, p.description, p.price, p.quantity, c.title as categoriesName FROM Products p JOIN Categories c where p.id=?1", nativeQuery = true)
+    List<ProductsJoin> getProductsWithCategoriesTitleById(int id);
+
+    @Query(value="SELECT p.id, p.title, p.image, p.images, p.description, p.price, p.quantity, c.title as categoriesName FROM Products p JOIN Categories c where c.title like (?1)", nativeQuery = true)
+    List<ProductsJoin> getProductsWithCategoriesTitleByCategoryName(String categoryName);
 }

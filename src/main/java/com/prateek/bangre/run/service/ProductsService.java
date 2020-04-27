@@ -3,6 +3,7 @@ package com.prateek.bangre.run.service;
 import com.prateek.bangre.jpa_repository.ProductsRepository;
 import com.prateek.bangre.model.Products;
 import com.prateek.bangre.model.ProductsJoin;
+import com.prateek.bangre.model.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,9 +31,9 @@ public class ProductsService {
         productsRepository.save(product);
     }
 
-    public Products getProductsById(int id) {
-        Optional<Products> optionalUser = productsRepository.findById(id);
-        return optionalUser.isPresent() ? optionalUser.get() : null;
+    public Products getById(int id) {
+        Optional<Products> optionalProducts = productsRepository.findById(id);
+        return optionalProducts.isPresent() ? optionalProducts.get() : null;
     }
 
     public List<Products> getProductsByCategoriesId(int id) {
@@ -45,5 +46,13 @@ public class ProductsService {
 
     public List<ProductsJoin> getProductsWithCategories() {
         return productsRepository.getProductsWithCategoriesTitle();
+    }
+
+    public List<ProductsJoin> getProductsWithCategoriesById(int id) {
+        return productsRepository.getProductsWithCategoriesTitleById(id);
+    }
+
+    public List<ProductsJoin> getProductsWithCategoriesByCategoryName(String categoryName) {
+        return productsRepository.getProductsWithCategoriesTitleByCategoryName(categoryName);
     }
 }

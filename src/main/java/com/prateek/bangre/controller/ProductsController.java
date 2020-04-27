@@ -20,13 +20,10 @@ import java.util.List;
 public class ProductsController  {
 
     @Autowired
-    CategoriesService categoriesService;
-
-    @Autowired
     ProductsService productsService;
 
     @GetMapping
-    private ApiResponse<Products> getProducts(@RequestParam int page, @RequestParam(defaultValue = "0") int limit){
+    private ApiResponse<ProductsJoin> getProducts(@RequestParam int page, @RequestParam(defaultValue = "0") int limit){
         page = (page == 0 ? 1 : page);
         limit = (limit == 0 ? 10 : limit);   // set limit of items per page
         int startValue;
@@ -42,22 +39,43 @@ public class ProductsController  {
         List<ProductsJoin> productsDtoList = productsService.getProductsWithCategories().subList(startValue, endValue);
 
         if (!productsDtoList.isEmpty()){
-            return new ApiResponse<Products>(HttpStatus.OK.value(),"Products list fetched successfully.", productsDtoList);
+            return new ApiResponse<>(HttpStatus.OK.value(),"Products list fetched successfully.", productsDtoList);
         }else {
-            return new ApiResponse<Products>(HttpStatus.OK.value(),"No products found", productsDtoList);
+            return new ApiResponse<>(HttpStatus.OK.value(),"No products found", productsDtoList);
         }
     }
 
     @GetMapping("/{prodId}")
-    private ApiResponse<Products> getProductsById(@PathVariable int prodId){
+    private ApiResponse<ProductsJoin> getProductsById(@PathVariable int prodId){
 
-        ArrayList<Products> productsList = new ArrayList<>();
-
-        productsList.add(productsService.getProductsById(prodId));
-        if (!productsList.isEmpty()){
-            return new ApiResponse<Products>(HttpStatus.OK.value(),"Products list fetched successfully.", productsList);
+        List<ProductsJoin> productsDtoListByID = productsService.getProductsWithCategoriesById(prodId);
+        if (productsDtoListByID != null){
+            return new ApiResponse<>(HttpStatus.OK.value(),"Products fetched successfully.", productsDtoListByID);
         }else {
-            return new ApiResponse<Products>(HttpStatus.OK.value(),"No product found with id: "+prodId, productsList);
+            return new ApiResponse<>(HttpStatus.OK.value(),"No product found with id: "+prodId, productsDtoListByID);
+        }
+    }
+
+    @GetMapping("/category/{categoryName}")
+    private ApiResponse<ProductsJoin> getProductsByCategoryNameAndPage(@PathVariable String categoryName, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "0") int limit){
+
+        page = page== 0 ? page : 1;   // check if page query param is defined or not
+        limit = limit== 0 ? limit : 10;   // set limit of items per page
+        int startValue;
+        int endValue;
+        if (page > 0) {
+            startValue = (page * limit) - limit;      // 0, 10, 20, 30
+            endValue = page * limit;                  // 10, 20, 30, 40
+        } else {
+            startValue = 0;
+            endValue = 10;
+        }
+
+        List<ProductsJoin> productsDtoListByCategoryName = productsService.getProductsWithCategoriesByCategoryName(categoryName).subList(startValue, endValue);
+        if (productsDtoListByCategoryName != null){
+            return new ApiResponse<>(HttpStatus.OK.value(),"Products fetched successfully.", productsDtoListByCategoryName);
+        }else {
+            return new ApiResponse<>(HttpStatus.OK.value(),"No products found matching the category: "+categoryName, productsDtoListByCategoryName);
         }
     }
 

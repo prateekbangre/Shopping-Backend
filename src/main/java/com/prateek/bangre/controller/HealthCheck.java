@@ -1,6 +1,7 @@
 package com.prateek.bangre.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -8,9 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
  * @Project Shoping-Backend
  */
 @RestController
+@RequestMapping("/api/healthcheck")
 public class HealthCheck {
 
-    @GetMapping("/healthcheck")
+    @GetMapping
     private String getHealthCheck(){
         return "working.....!!!!!";
     }
