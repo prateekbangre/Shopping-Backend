@@ -2,6 +2,7 @@ package com.prateek.bangre.controller;
 
 import com.prateek.bangre.model.ApiResponse;
 import com.prateek.bangre.model.Users;
+import com.prateek.bangre.model.UsersRequest;
 import com.prateek.bangre.run.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,10 +21,10 @@ public class UserController  {
     @Autowired
     private UsersService usersService;
 
-    @PostMapping
-    public ApiResponse<Users> saveUser(@RequestBody Users user){
-        return new ApiResponse<>(HttpStatus.OK.value(), "User saved successfully.",usersService.updateUsers(user));
-    }
+//    @PostMapping
+//    public ApiResponse<Users> saveUser(@RequestBody Users user){
+//        return new ApiResponse<>(HttpStatus.OK.value(), "User saved successfully.",usersService.updateUsers(user));
+//    }
 
     @GetMapping
     public ApiResponse<List<Users>> listUser(){
@@ -35,14 +36,18 @@ public class UserController  {
         return new ApiResponse<>(HttpStatus.OK.value(), "User fetched successfully.",usersService.findUsersById(id));
     }
 
-    @PutMapping("/{id}")
-    public ApiResponse<Users> update(@RequestBody Users userDto) {
-        return new ApiResponse<>(HttpStatus.OK.value(), "User updated successfully.",usersService.updateUsers(userDto));
+    @PostMapping("/{id}")
+    public ApiResponse<Users> update(@PathVariable int id, @RequestBody UsersRequest usersRequest) {
+        if (usersService.updateUsersWithUsersRequest(usersRequest, id) == 1){
+            return new ApiResponse<>(HttpStatus.OK.value(), "User updated successfully.","");
+        }else {
+            return new ApiResponse<>(HttpStatus.OK.value(), "User updated Fail.",null);
+        }
     }
 
-    @DeleteMapping("/{id}")
-    public ApiResponse<Void> delete(@PathVariable int id) {
-        usersService.deleteUsersById(id);
-        return new ApiResponse<>(HttpStatus.OK.value(), "User deleted successfully.", null);
-    }
+//    @DeleteMapping("/{id}")
+//    public ApiResponse<Void> delete(@PathVariable int id) {
+//        usersService.deleteUsersById(id);
+//        return new ApiResponse<>(HttpStatus.OK.value(), "User deleted successfully.", null);
+//    }
 }

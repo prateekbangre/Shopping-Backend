@@ -3,6 +3,7 @@ package com.prateek.bangre.run.service;
 import com.prateek.bangre.jpa_repository.UsersRepository;
 import com.prateek.bangre.model.Addresses;
 import com.prateek.bangre.model.Users;
+import com.prateek.bangre.model.UsersRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,8 +29,13 @@ public class UsersService {
         return list;
     }
 
-    public Users updateUsers(Users product) {
-        return usersRepository.save(product);
+    public Users updateUsers(Users user) {
+        Users user1 = findUsersById(user.getId());
+        if (user1 != null) {
+            user.setPassword(user1.getPassword());
+            user.setPassword(user1.getType());
+        }
+        return usersRepository.save(user);
     }
 
     public Users findUsersById(int id) {
@@ -39,5 +45,17 @@ public class UsersService {
 
     public void deleteUsersById(int id) {
         usersRepository.deleteById(id);
+    }
+
+    public int updateUsersWithUsersRequest(UsersRequest usersRequest, int userId) {
+        Users user = findUsersById(userId);
+        if (usersRequest.getPassword() == null) {
+            usersRequest.setPassword(user.getPassword());
+        }
+        return usersRepository.updateUserDetails(usersRequest.getUsername(), usersRequest.getPassword(),usersRequest.getEmail(), usersRequest.getFname(), usersRequest.getLname(), usersRequest.getAge(), userId);
+    }
+
+    public Users findUsersByEmail(String email) {
+        return usersRepository.findByEmail(email);
     }
 }

@@ -14,6 +14,6 @@ public class HealthCheck {
 
     @GetMapping
     private String getHealthCheck(){
-        return "working.....!!!!!";
+        return "working.....!!";
     }
 }
