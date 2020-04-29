@@ -1,9 +1,6 @@
 package com.prateek.bangre.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -11,10 +8,10 @@ import javax.persistence.*;
  * @author prateek.bangre on 26/04/20.
  * @Project Shoping-Backend
  */
+@Builder
 @Entity
 @Table(name = "orders")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Orders {
@@ -23,5 +20,5 @@ public class Orders {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column
-    private String user_id;
+    private int user_id;
 }
