@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class HealthCheck {
 
     @GetMapping
-    private String getHealthCheck(){
+    public String getHealthCheck(){
         return "working.....!!";
     }
 }

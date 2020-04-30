@@ -28,5 +28,5 @@ public class Categories {
     private String title;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "categories")
-    private Set<Products> products = new HashSet<Products>(0);
+    private Set<Products> products = new HashSet<>(0);
 }

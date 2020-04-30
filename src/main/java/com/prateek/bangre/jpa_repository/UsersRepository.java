@@ -2,8 +2,6 @@ package com.prateek.bangre.jpa_repository;
 
 
 import com.prateek.bangre.model.Users;
-import com.prateek.bangre.model.UsersRequest;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -19,4 +17,6 @@ public interface UsersRepository extends CrudRepository<Users, Integer> {
     int updateUserDetails(String username, String password, String email, String fname, String lname, int age, int id);
 
     Users findByEmail(String email);
+
+    Users findByUsername(String username);
 }

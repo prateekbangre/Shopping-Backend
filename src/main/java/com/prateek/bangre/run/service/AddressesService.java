@@ -2,8 +2,6 @@ package com.prateek.bangre.run.service;
 
 import com.prateek.bangre.jpa_repository.AddressesRepository;
 import com.prateek.bangre.model.Addresses;
-import com.prateek.bangre.model.Products;
-import com.prateek.bangre.model.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

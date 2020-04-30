@@ -3,8 +3,6 @@ package com.prateek.bangre.run.service;
 import com.prateek.bangre.jpa_repository.OrdersRepository;
 import com.prateek.bangre.model.Orders;
 import com.prateek.bangre.model.OrdersDetailsJoin;
-import com.prateek.bangre.model.Products;
-import com.prateek.bangre.model.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

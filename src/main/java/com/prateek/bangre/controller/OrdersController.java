@@ -23,7 +23,7 @@ public class OrdersController {
     OrdersService ordersService;
 
     @GetMapping
-    ApiResponse<Orders> getAllOrders(){
+    public ApiResponse<Orders> getAllOrders(){
 
         List<OrdersDetailsJoin> allOrders = ordersService.getAllOrders();
 
@@ -35,7 +35,7 @@ public class OrdersController {
     }
 
     @GetMapping("/{orderId}")
-    ApiResponse<Orders> getOrdersById(@PathVariable int orderId){
+    public ApiResponse<Orders> getOrdersById(@PathVariable int orderId){
 
         List<OrdersDetailsJoin> orders = ordersService.getOrdersDetailsById(orderId);
 
@@ -47,7 +47,7 @@ public class OrdersController {
     }
 
     @PostMapping("/new")
-    ApiResponse<OrdersDetailsJoin> placeNewOrder(@RequestBody NewOrderDto newOrderDto){
+    public ApiResponse<OrdersDetailsJoin> placeNewOrder(@RequestBody NewOrderDto newOrderDto){
 
 //        int id = ordersService.updateOrders(Orders.builder().user_id(newOrderDto.getUserId()).build());
 
@@ -55,7 +55,7 @@ public class OrdersController {
     }
 
     @PostMapping("/payment")
-    ApiResponse<OrdersDetailsJoin> makingPayment(){
+    public ApiResponse<OrdersDetailsJoin> makingPayment(){
 
 
         return new ApiResponse<>(HttpStatus.OK.value(), "in-progress", "");

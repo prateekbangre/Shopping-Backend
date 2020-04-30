@@ -3,7 +3,6 @@ package com.prateek.bangre.jpa_repository;
 
 import com.prateek.bangre.model.Orders;
 import com.prateek.bangre.model.OrdersDetailsJoin;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 

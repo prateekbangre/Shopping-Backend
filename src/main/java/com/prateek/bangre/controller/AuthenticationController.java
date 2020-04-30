@@ -1,22 +1,22 @@
 package com.prateek.bangre.controller;
 
+import com.prateek.bangre.config.JwtToken;
 import com.prateek.bangre.model.ApiResponse;
 import com.prateek.bangre.model.LoginResponse;
 import com.prateek.bangre.model.Users;
 import com.prateek.bangre.model.UsersRequest;
+import com.prateek.bangre.run.service.JwtUserDetailsService;
 import com.prateek.bangre.run.service.UsersService;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import java.util.Date;
-
-import static com.prateek.bangre.util.SecurityUtil.*;
 
 /**
  * @author prateek.bangre on 28/04/20.
@@ -29,37 +29,46 @@ public class AuthenticationController {
     @Autowired
     private UsersService usersService;
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtToken jwtToken;
+
+    @Autowired
+    private JwtUserDetailsService jwtUserDetailsService;
+
     @PostMapping("/login")
-    ApiResponse<String> checkLogin(@RequestBody UsersRequest usersRequest){
+    public ApiResponse<LoginResponse> createAuthenticationToken(@RequestBody UsersRequest authenticationRequest) throws Exception {
 
-        String msg = isPasswordAndUserMatch(usersRequest.getEmail(), usersRequest.getPassword(), usersService);
-        String token = Jwts.builder()
-                .setSubject("users/TzMUocMF4p")
-                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
-                .claim("state", "true")
-                .claim("email", usersRequest.getEmail())
-                .claim("username", usersRequest.getUsername())
-                .signWith(
-                        SignatureAlgorithm.HS512,
-                        SECRET
-                )
-                .compact();
+        String msg = authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
-        LoginResponse response = LoginResponse.builder()
-                .token(token)
-                .auth(true)
-                .email(usersRequest.getEmail())
-                .username(usersRequest.getUsername())
-                .build();
-        if (msg.isEmpty()){
+        if (msg.equals("Credential match")){
+            final UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+            final String token = jwtToken.generateToken(userDetails);
+            LoginResponse response = LoginResponse.builder()
+                                        .token(token)
+                                        .auth(true)
+                                        .email(authenticationRequest.getEmail())
+                                        .username(authenticationRequest.getUsername())
+                                        .build();
             return new ApiResponse(HttpStatus.OK.value(), "Successfully", response);
         }else {
             return new ApiResponse(HttpStatus.OK.value(), msg, "");
         }
     }
 
+    private String authenticate(String username, String password) throws Exception {
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+            return "Credential match";
+        } catch (Exception e) {
+            return "Credential not-match";
+        }
+    }
+
     @PostMapping("/register")
-    ApiResponse<String> registerNewUser(@RequestBody UsersRequest usersRequest){
+    public ApiResponse<String> registerNewUser(@RequestBody UsersRequest usersRequest){
 
         String msg = "";
         if (usersRequest.getEmail() == null){
@@ -90,6 +99,5 @@ public class AuthenticationController {
             return new ApiResponse(HttpStatus.OK.value(), msg, "");
         }
     }
-
 
 }
