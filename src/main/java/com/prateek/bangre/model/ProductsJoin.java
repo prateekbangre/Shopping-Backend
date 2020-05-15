@@ -16,11 +16,11 @@ public interface ProductsJoin {
 //    private String categoriesName;
 
      int getId();
-     String getTitle();
+     String getName();
      String getImage();
      String getImages();
      String getDescription();
      float getPrice();
      int getQuantity();
-     String getCategoriesName();
+     String getCategory();
 }

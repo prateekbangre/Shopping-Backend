@@ -16,7 +16,7 @@ import java.util.List;
 public interface ProductsRepository extends CrudRepository<Products, Integer> {
     List<Products> findAllBycatId(int cat_id);
 
-    @Query(value="SELECT p.id, p.title, p.image, p.images, p.description, p.price, p.quantity, c.title as categoriesName FROM Products p JOIN Categories c order by p.id", nativeQuery = true)
+    @Query(value="SELECT p.id, p.title as name, p.image, p.images, p.description, p.price, p.quantity, (select c.title from shopping_db.categories as c where p.cat_id = c.id) as category FROM Products p", nativeQuery = true)
     public  List<ProductsJoin> getProductsWithCategoriesTitle();
 
     @Query(value="SELECT p.id, p.title, p.image, p.images, p.description, p.price, p.quantity, c.title as categoriesName FROM Products p JOIN Categories c where p.id=?1", nativeQuery = true)
